@@ -3,54 +3,504 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Verify — Fake News Checker</title>
+
 <meta name="theme-color" content="#B23A2E">
 <meta name="manifest" content="manifest.json">
 <meta name="icon" content="icon.svg">
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#FBF7EE;color:#2A2620;font-family:Georgia,serif;transition:background .2s,color .2s}
-button,input,textarea{font:inherit}button{cursor:pointer}
-.ticker{background:#1E1B16;color:#D8CFB8;overflow:hidden;white-space:nowrap;padding:7px;font:11px monospace}
-.ticker span{margin-right:50px}
-.header{position:sticky;top:0;background:#FBF7EE;border-bottom:1px solid #E4DFD3;padding:16px 24px;display:flex;justify-content:space-between;z-index:2}
-.logo{font-size:22px;font-weight:bold}.nav button{background:none;border:0;font:11px monospace;margin-left:18px}
-.section{max-width:780px;margin:auto;padding:55px 22px}
-.hero{text-align:center;padding-top:75px}.eyebrow,.tag{font:11px monospace;letter-spacing:2px;color:#B23A2E}
-.hero h1{font-size:48px;line-height:1.1;margin:15px 0}.hero p{max-width:500px;margin:0 auto 25px;color:#5C564A;font-size:17px;line-height:1.6}
-.primary,.ghost{padding:12px 20px;border-radius:4px;font:13px monospace}.primary{background:#B23A2E;color:#fff;border:0}.ghost{background:transparent;border:1px solid #2A2620}
-.intro{text-align:center;padding:55px 20px 0}.intro h1{font-size:34px}.sub{color:#5C564A}
-.textarea,.input{width:100%;padding:12px;border:1px solid #D8D2C4;border-radius:4px;background:#fff;margin:8px 0 12px}
-.row{display:flex;gap:10px}.row .input{flex:1}
-.result{background:#fff;border:1px solid #E4DFD3;border-radius:6px;padding:18px;margin-top:18px}
-.myth-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.card{border:1.5px solid #B23A2E;border-radius:6px;padding:18px;background:#FBF1EE;min-height:120px}.card .label{font:11px monospace;color:#B23A2E;margin-bottom:8px}
-.steps{display:flex;gap:20px;flex-wrap:wrap}.step{flex:1 1 190px}.num{font:12px monospace;color:#B23A2E}
-.snap{background:#F0EBDD;padding:18px;border-radius:6px;flex:1}.snaprow{display:flex;gap:15px;flex-wrap:wrap}
-.footer{text-align:center;border-top:1px solid #E4DFD3;padding:28px;font:13px monospace;color:#8A8474}
-.chat{position:fixed;right:18px;bottom:18px;z-index:5}.fab{width:52px;height:52px;border:0;border-radius:50%;background:#B23A2E;color:#fff;font-size:20px}
-.chatbox{width:300px;height:380px;background:#fff;box-shadow:0 8px 24px #0003;border-radius:10px;margin-bottom:10px;display:flex;flex-direction:column}
-.chathead{background:#B23A2E;color:#fff;padding:12px;font:12px monospace;display:flex;justify-content:space-between}
-.chatbody{flex:1;padding:12px;overflow:auto;font:13px sans-serif}.bubble{padding:8px 10px;background:#EFEAE0;border-radius:10px;margin:6px 0}
-.bubble.user{background:#B23A2E;color:#fff;margin-left:20%}.chatrow{display:flex}.chatrow input{flex:1;padding:10px;border:0;border-top:1px solid #eee}.chatrow button{width:42px;border:0;background:#B23A2E;color:#fff}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}.tabs button{background:transparent;border:1px solid #D8D2C4;border-radius:4px;padding:9px 12px;font:11px monospace}
-.tabs button.active{background:#2A2620;color:#fff;border-color:#2A2620}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{padding:9px 12px;border-radius:4px;font:11px monospace;background:transparent;border:1px solid #D8D2C4}
-.verdict{display:inline-block;padding:7px 10px;border-radius:4px;font:12px monospace;margin:7px 0}.true{background:#EAF0E9;color:#3F6E52}.false{background:#F8E5E1;color:#9D2F25}.misleading{background:#F4EBDD;color:#80611B}.unverifiable{background:#EEEAE2;color:#5C564A}
-.score{height:8px;background:#E9E4D8;border-radius:10px;overflow:hidden;margin:7px 0 15px}.score i{display:block;height:100%;background:#B23A2E;width:0}
-.small{font:11px monospace;color:#8A8474}.warning{font:12px monospace;color:#6A6255;background:#F0EBDD;padding:11px;border-radius:4px;margin-top:12px}
-.history-item{border-top:1px solid #E4DFD3;padding:14px 0}.history-item:first-child{border-top:0}.history-item button{margin-right:7px}
-.source-list{padding-left:20px}.source-list li{margin:7px 0}.source-list a{color:#B23A2E}
-.dark{background:#211E19;color:#EEE7D8}.dark .header,.dark .result,.dark .chatbox,.dark .textarea,.dark .input{background:#2A2722;color:#EEE7D8;border-color:#4A443A}
-.dark .sub,.dark .hero p{color:#C4BBAA}.dark .ghost,.dark .tabs button,.dark .actions button{color:#EEE7D8;border-color:#5A5246}
-.dark .card{background:#332823}.dark .snap,.dark .warning{background:#302C25}.dark .footer,.dark .header{border-color:#433E35}
-@media(max-width:640px){.grid{grid-template-columns:1fr}.row{flex-direction:column}.hero h1{font-size:40px}.section{padding:45px 18px}.header{padding:14px 16px}.nav button{margin-left:10px}.chat{right:12px;bottom:12px}.chatbox{width:min(300px,calc(100vw - 24px))}}
+
+body{
+  margin:0;
+  background:#FBF7EE;
+  color:#2A2620;
+  font-family:Georgia,serif;
+  transition:background .2s,color .2s
+}
+
+button,input,textarea{
+  font:inherit
+}
+
+button{
+  cursor:pointer
+}
+
+.ticker{
+  background:#1E1B16;
+  color:#D8CFB8;
+  overflow:hidden;
+  white-space:nowrap;
+  padding:7px;
+  font:11px monospace
+}
+
+.ticker span{
+  margin-right:50px
+}
+
+.header{
+  position:sticky;
+  top:0;
+  background:#FBF7EE;
+  border-bottom:1px solid #E4DFD3;
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  z-index:2
+}
+
+.logo{
+  font-size:22px;
+  font-weight:bold
+}
+
+.nav button{
+  background:none;
+  border:0;
+  font:11px monospace;
+  margin-left:18px
+}
+
+.section{
+  max-width:780px;
+  margin:auto;
+  padding:55px 22px
+}
+
+.hero{
+  text-align:center;
+  padding-top:75px
+}
+
+.eyebrow,.tag{
+  font:11px monospace;
+  letter-spacing:2px;
+  color:#B23A2E
+}
+
+.hero h1{
+  font-size:48px;
+  line-height:1.1;
+  margin:15px 0
+}
+
+.hero p{
+  max-width:500px;
+  margin:0 auto 25px;
+  color:#5C564A;
+  font-size:17px;
+  line-height:1.6
+}
+
+.primary,.ghost{
+  padding:12px 20px;
+  border-radius:4px;
+  font:13px monospace
+}
+
+.primary{
+  background:#B23A2E;
+  color:#fff;
+  border:0
+}
+
+.ghost{
+  background:transparent;
+  border:1px solid #2A2620
+}
+
+.intro{
+  text-align:center;
+  padding:55px 20px 0
+}
+
+.intro h1{
+  font-size:34px
+}
+
+.sub{
+  color:#5C564A
+}
+
+.textarea,.input{
+  width:100%;
+  padding:12px;
+  border:1px solid #D8D2C4;
+  border-radius:4px;
+  background:#fff;
+  margin:8px 0 12px
+}
+
+.row{
+  display:flex;
+  gap:10px
+}
+
+.row .input{
+  flex:1
+}
+
+.result{
+  background:#fff;
+  border:1px solid #E4DFD3;
+  border-radius:6px;
+  padding:18px;
+  margin-top:18px
+}
+
+.myth-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:start
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px
+}
+
+.card{
+  border:1.5px solid #B23A2E;
+  border-radius:6px;
+  padding:18px;
+  background:#FBF1EE;
+  min-height:120px
+}
+
+.card .label{
+  font:11px monospace;
+  color:#B23A2E;
+  margin-bottom:8px
+}
+
+.steps{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap
+}
+
+.step{
+  flex:1 1 190px
+}
+
+.num{
+  font:12px monospace;
+  color:#B23A2E
+}
+
+.snap{
+  background:#F0EBDD;
+  padding:18px;
+  border-radius:6px;
+  flex:1
+}
+
+.snaprow{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap
+}
+
+.footer{
+  text-align:center;
+  border-top:1px solid #E4DFD3;
+  padding:28px;
+  font:13px monospace;
+  color:#8A8474
+}
+
+.chat{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:5
+}
+
+.fab{
+  width:52px;
+  height:52px;
+  border:0;
+  border-radius:50%;
+  background:#B23A2E;
+  color:#fff;
+  font-size:20px
+}
+
+.chatbox{
+  width:300px;
+  height:380px;
+  background:#fff;
+  box-shadow:0 8px 24px #0003;
+  border-radius:10px;
+  margin-bottom:10px;
+  display:flex;
+  flex-direction:column
+}
+
+.chathead{
+  background:#B23A2E;
+  color:#fff;
+  padding:12px;
+  font:12px monospace;
+  display:flex;
+  justify-content:space-between
+}
+
+.chatbody{
+  flex:1;
+  padding:12px;
+  overflow:auto;
+  font:13px sans-serif
+}
+
+.bubble{
+  padding:8px 10px;
+  background:#EFEAE0;
+  border-radius:10px;
+  margin:6px 0
+}
+
+.bubble.user{
+  background:#B23A2E;
+  color:#fff;
+  margin-left:20%
+}
+
+.chatrow{
+  display:flex
+}
+
+.chatrow input{
+  flex:1;
+  padding:10px;
+  border:0;
+  border-top:1px solid #eee
+}
+
+.chatrow button{
+  width:42px;
+  border:0;
+  background:#B23A2E;
+  color:#fff
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:18px 0 4px
+}
+
+.tabs button{
+  background:transparent;
+  border:1px solid #D8D2C4;
+  border-radius:4px;
+  padding:9px 12px;
+  font:11px monospace
+}
+
+.tabs button.active{
+  background:#2A2620;
+  color:#fff;
+  border-color:#2A2620
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px
+}
+
+.actions button{
+  padding:9px 12px;
+  border-radius:4px;
+  font:11px monospace;
+  background:transparent;
+  border:1px solid #D8D2C4
+}
+
+.verdict{
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:4px;
+  font:12px monospace;
+  margin:7px 0
+}
+
+.true{
+  background:#EAF0E9;
+  color:#3F6E52
+}
+
+.false{
+  background:#F8E5E1;
+  color:#9D2F25
+}
+
+.misleading{
+  background:#F4EBDD;
+  color:#80611B
+}
+
+.unverifiable{
+  background:#EEEAE2;
+  color:#5C564A
+}
+
+.score{
+  height:8px;
+  background:#E9E4D8;
+  border-radius:10px;
+  overflow:hidden;
+  margin:7px 0 15px
+}
+
+.score i{
+  display:block;
+  height:100%;
+  background:#B23A2E;
+  width:0
+}
+
+.small{
+  font:11px monospace;
+  color:#8A8474
+}
+
+.warning{
+  font:12px monospace;
+  color:#6A6255;
+  background:#F0EBDD;
+  padding:11px;
+  border-radius:4px;
+  margin-top:12px
+}
+
+.history-item{
+  border-top:1px solid #E4DFD3;
+  padding:14px 0
+}
+
+.history-item:first-child{
+  border-top:0
+}
+
+.history-item button{
+  margin-right:7px
+}
+
+.source-list{
+  padding-left:20px
+}
+
+.source-list li{
+  margin:7px 0
+}
+
+.source-list a{
+  color:#B23A2E
+}
+
+.dark{
+  background:#211E19;
+  color:#EEE7D8
+}
+
+.dark .header,
+.dark .result,
+.dark .chatbox,
+.dark .textarea,
+.dark .input{
+  background:#2A2722;
+  color:#EEE7D8;
+  border-color:#4A443A
+}
+
+.dark .sub,
+.dark .hero p{
+  color:#C4BBAA
+}
+
+.dark .ghost,
+.dark .tabs button,
+.dark .actions button{
+  color:#EEE7D8;
+  border-color:#5A5246
+}
+
+.dark .card{
+  background:#332823
+}
+
+.dark .snap,
+.dark .warning{
+  background:#302C25
+}
+
+.dark .footer,
+.dark .header{
+  border-color:#433E35
+}
+
+@media(max-width:640px){
+
+  .grid{
+    grid-template-columns:1fr
+  }
+
+  .row{
+    flex-direction:column
+  }
+
+  .hero h1{
+    font-size:40px
+  }
+
+  .section{
+    padding:45px 18px
+  }
+
+  .header{
+    padding:14px 16px
+  }
+
+  .nav button{
+    margin-left:10px
+  }
+
+  .chat{
+    right:12px;
+    bottom:12px
+  }
+
+  .chatbox{
+    width:min(300px,calc(100vw - 24px))
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div id="app"></div>
+
 <script>
-const T=["FLAGGED — Miracle fruit cures all disease — Misleading","VERIFIED — Local election results certified by state board — Likely True","FLAGGED — Viral photo from 2019 recirculated as breaking — Needs Context","FLAGGED — Fabricated quote attributed to public official — Likely False","VERIFIED — New climate report figures match source data — Likely True"];
+
+const T=[
+"FLAGGED — Miracle fruit cures all disease — Misleading",
+"VERIFIED — Local election results certified by state board — Likely True",
+"FLAGGED — Viral photo from 2019 recirculated as breaking — Needs Context",
+"FLAGGED — Fabricated quote attributed to public official — Likely False",
+"VERIFIED — New climate report figures match source data — Likely True"
+];
+
 const P=[
 ['If a headline sounds shocking, it is probably fake.','Real news can be shocking too. Check the source and details.'],
 ['Screenshots cannot be faked.','Screenshots are easy to edit. Find the original post.'],
@@ -73,215 +523,2000 @@ const P=[
 ['Official-looking logos guarantee authenticity.','Logos are easy to copy.'],
 ['Debunked claims stop spreading.','Debunked claims can circulate for years.']
 ];
-let page='home',chat=false,currentResult=null,checkMode='claim',labMode='evolution';
+
+let page='home';
+let chat=false;
+let currentResult=null;
+let checkMode='claim';
+let labMode='evolution';
+
 const A=document.getElementById('app');
-const e=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+const e=s=>String(s??'').replace(
+  /[&<>]/g,
+  c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;'
+  }[c])
+);
+
 const escAttr=s=>e(s).replace(/"/g,'&quot;');
 
 function header(){
- return '<header class="header"><div class="logo">VERIFY</div><nav class="nav"><button onclick="go(\'home\')">HOME</button><button onclick="go(\'features\')">FEATURES</button><button onclick="go(\'medialab\')">MEDIA LAB</button><button onclick="go(\'history\')">HISTORY</button><button onclick="toggleDark()">◐</button></nav></header>'
+
+  return `
+  <header class="header">
+
+    <div class="logo">VERIFY</div>
+
+    <nav class="nav">
+
+      <button onclick="go('home')">HOME</button>
+
+      <button onclick="go('features')">FEATURES</button>
+
+      <button onclick="go('medialab')">MEDIA LAB</button>
+
+      <button onclick="go('history')">HISTORY</button>
+
+      <button onclick="toggleDark()">◐</button>
+
+    </nav>
+
+  </header>
+  `;
 }
-function ticker(){return '<div class="ticker">'+T.concat(T).map(x=>'<span>'+e(x)+'</span>').join('')+'</div>'}
-function home(){return '<section class="section hero"><div class="eyebrow">MEDIA LITERACY DESK</div><h1>Read it twice.<br><span style="color:#B23A2E">Share it once.</span></h1><p>Check claims, size up sources, and spot the tricks misinformation uses — before it reaches your feed.</p><button class="primary" onclick="go(\'features\')">Go to the toolkit</button></section>'+myths()+how()+snapshot()}
+
+function ticker(){
+
+  return `
+  <div class="ticker">
+    ${T.concat(T)
+      .map(x=>'<span>'+e(x)+'</span>')
+      .join('')}
+  </div>
+  `;
+}
+
+function home(){
+
+  return `
+  <section class="section hero">
+
+    <div class="eyebrow">
+      MEDIA LITERACY DESK
+    </div>
+
+    <h1>
+      Read it twice.<br>
+      <span style="color:#B23A2E">
+        Share it once.
+      </span>
+    </h1>
+
+    <p>
+      Check claims, size up sources, and spot the tricks
+      misinformation uses — before it reaches your feed.
+    </p>
+
+    <button class="primary"
+      onclick="go('features')">
+      Go to the toolkit
+    </button>
+
+  </section>
+
+  ${myths()}
+  ${how()}
+  ${snapshot()}
+  `;
+}
+
 function features(){
- return '<div class="intro"><div class="eyebrow">THE TOOLKIT</div><h1>Four ways to check.</h1></div>'+
- '<section class="section"><div class="tabs"><button class="'+(checkMode==='claim'?'active':'')+'" onclick="setMode(\'claim\')">CLAIM</button><button class="'+(checkMode==='article'?'active':'')+'" onclick="setMode(\'article\')">ARTICLE TEXT</button><button class="'+(checkMode==='url'?'active':'')+'" onclick="setMode(\'url\')">NEWS URL</button><button class="'+(checkMode==='source'?'active':'')+'" onclick="setMode(\'source\')">CHECK A SOURCE</button></div><div id="checker"></div></section>'
+
+  return `
+  <div class="intro">
+
+    <div class="eyebrow">
+      THE TOOLKIT
+    </div>
+
+    <h1>
+      Four ways to check.
+    </h1>
+
+  </div>
+
+  <section class="section">
+
+    <div class="tabs">
+
+      <button
+        class="${checkMode==='claim'?'active':''}"
+        onclick="setMode('claim')">
+        CLAIM
+      </button>
+
+      <button
+        class="${checkMode==='article'?'active':''}"
+        onclick="setMode('article')">
+        ARTICLE TEXT
+      </button>
+
+      <button
+        class="${checkMode==='url'?'active':''}"
+        onclick="setMode('url')">
+        NEWS URL
+      </button>
+
+      <button
+        class="${checkMode==='source'?'active':''}"
+        onclick="setMode('source')">
+        CHECK A SOURCE
+      </button>
+
+    </div>
+
+    <div id="checker"></div>
+
+  </section>
+  `;
 }
-function setMode(m){checkMode=m;render();setTimeout(()=>document.getElementById('checker')?.scrollIntoView({block:'start'}),0)}
+
+function setMode(m){
+
+  checkMode=m;
+
+  render();
+
+  setTimeout(
+    ()=>document.getElementById('checker')
+      ?.scrollIntoView({block:'start'}),
+    0
+  );
+}
+
 function claim(){
- return '<div class="tag">FEATURE 01</div><h2>Check a claim</h2><p class="sub">Paste a headline, statement, or short claim.</p><textarea id="ci" class="textarea" rows="4" placeholder="e.g. Scientists confirm coffee cures insomnia"></textarea><button class="primary" onclick="checkClaim()">Check it</button><div id="cr"></div>'
+
+  return `
+  <div class="tag">
+    FEATURE 01
+  </div>
+
+  <h2>
+    Check a claim
+  </h2>
+
+  <p class="sub">
+    Paste a headline, statement, or short claim.
+  </p>
+
+  <textarea
+    id="ci"
+    class="textarea"
+    rows="4"
+    placeholder="e.g. Scientists confirm coffee cures insomnia">
+  </textarea>
+
+  <button
+    class="primary"
+    onclick="checkClaim()">
+    Check it
+  </button>
+
+  <div id="cr"></div>
+  `;
 }
+
 function article(){
- return '<div class="tag">FEATURE 01</div><h2>Check article text</h2><p class="sub">Paste the article or the relevant passage. The checker will separate claims and assess them.</p><textarea id="ci" class="textarea" rows="9" placeholder="Paste article text here…"></textarea><button class="primary" onclick="checkClaim()">Check article</button><div id="cr"></div>'
+
+  return `
+  <div class="tag">
+    FEATURE 01
+  </div>
+
+  <h2>
+    Check article text
+  </h2>
+
+  <p class="sub">
+    Paste the article or the relevant passage.
+    The checker will separate claims and assess them.
+  </p>
+
+  <textarea
+    id="ci"
+    class="textarea"
+    rows="9"
+    placeholder="Paste article text here…">
+  </textarea>
+
+  <button
+    class="primary"
+    onclick="checkClaim()">
+    Check article
+  </button>
+
+  <div id="cr"></div>
+  `;
 }
+
 function urlCheck(){
- return '<div class="tag">FEATURE 01</div><h2>Check a news URL</h2><p class="sub">Enter the article URL. The Netlify backend must be configured to fetch the page for URL checking.</p><input id="ui" class="input" type="url" placeholder="https://example.com/news/article"><button class="primary" onclick="checkURL()">Check URL</button><div id="cr"></div><div class="warning">URL checking depends on the backend being able to retrieve the page. A URL alone is not proof that a story is true or false.</div>'
+
+  return `
+  <div class="tag">
+    FEATURE 01
+  </div>
+
+  <h2>
+    Check a news URL
+  </h2>
+
+  <p class="sub">
+    Enter the article URL. The Netlify backend must be
+    configured to fetch the page for URL checking.
+  </p>
+
+  <input
+    id="ui"
+    class="input"
+    type="url"
+    placeholder="https://example.com/news/article">
+
+  <button
+    class="primary"
+    onclick="checkURL()">
+    Check URL
+  </button>
+
+  <div id="cr"></div>
+
+  <div class="warning">
+    URL checking depends on the backend being able to
+    retrieve the page. A URL alone is not proof that a
+    story is true or false.
+  </div>
+  `;
 }
 
 function sourceCheck(){
- return '<div class="tag">FEATURE 02</div><h2>Check a source</h2><p class="sub">Enter an outlet, site, or publication name. This checks the source itself, not a specific claim.</p><div class="row"><input id="si" class="input" placeholder="e.g. dailynewswire24.com"><button class="primary" onclick="checkSource()">Check source</button></div><div id="sr"></div><div class="warning">A source assessment is separate from checking a claim. A source can publish both accurate and inaccurate information.</div>'
+
+  return `
+  <div class="tag">
+    FEATURE 02
+  </div>
+
+  <h2>
+    Check a source
+  </h2>
+
+  <p class="sub">
+    Enter an outlet, site, or publication name.
+    This checks the source itself, not a specific claim.
+  </p>
+
+  <div class="row">
+
+    <input
+      id="si"
+      class="input"
+      placeholder="e.g. dailynewswire24.com">
+
+    <button
+      class="primary"
+      onclick="checkSource()">
+      Check source
+    </button>
+
+  </div>
+
+  <div id="sr"></div>
+
+  <div class="warning">
+    A source assessment is separate from checking a claim.
+    A source can publish both accurate and inaccurate information.
+  </div>
+  `;
 }
+
 function myths(){
- return '<section class="section"><div class="tag">FEATURE 03</div><div class="myth-head"><div><h2>Myth vs. fact</h2><p class="sub">Tap a card to flip it.</p></div><button class="ghost" onclick="mythsGrid()">⇄ Exchange</button></div><div id="mg" class="grid"></div></section>'
+
+  return `
+  <section class="section">
+
+    <div class="tag">
+      FEATURE 03
+    </div>
+
+    <div class="myth-head">
+
+      <div>
+
+        <h2>
+          Myth vs. fact
+        </h2>
+
+        <p class="sub">
+          Tap a card to flip it.
+        </p>
+
+      </div>
+
+      <button
+        class="ghost"
+        onclick="mythsGrid()">
+        ⇄ Exchange
+      </button>
+
+    </div>
+
+    <div id="mg" class="grid"></div>
+
+  </section>
+  `;
 }
+
 function mythsGrid(){
- let a=[];while(a.length<4){let n=Math.floor(Math.random()*P.length);if(!a.includes(n))a.push(n)}
- const mg=document.getElementById('mg');if(mg)mg.innerHTML=a.map(i=>'<div class="card" onclick="flip(this,'+i+')"><div class="label">MYTH</div><p>'+e(P[i][0])+'</p></div>').join('')
+
+  let a=[];
+
+  while(a.length<4){
+
+    let n=Math.floor(Math.random()*P.length);
+
+    if(!a.includes(n)){
+      a.push(n);
+    }
+  }
+
+  const mg=document.getElementById('mg');
+
+  if(mg){
+
+    mg.innerHTML=a
+      .map(i=>
+        `
+        <div
+          class="card"
+          onclick="flip(this,${i})">
+
+          <div class="label">
+            MYTH
+          </div>
+
+          <p>
+            ${e(P[i][0])}
+          </p>
+
+        </div>
+        `
+      )
+      .join('');
+  }
 }
+
 function flip(x,i){
- let f=x.dataset.f==='1';x.dataset.f=f?'0':'1';x.querySelector('.label').textContent=f?'MYTH':'FACT';x.querySelector('p').textContent=f?P[i][0]:P[i][1];x.style.background=f?'#FBF1EE':'#EAF0E9';x.style.borderColor=f?'#B23A2E':'#3F6E52'
+
+  let f=x.dataset.f==='1';
+
+  x.dataset.f=f?'0':'1';
+
+  x.querySelector('.label').textContent=
+    f?'MYTH':'FACT';
+
+  x.querySelector('p').textContent=
+    f?P[i][0]:P[i][1];
+
+  x.style.background=
+    f?'#FBF1EE':'#EAF0E9';
+
+  x.style.borderColor=
+    f?'#B23A2E':'#3F6E52';
 }
-function how(){return '<section class="section"><h2>How it works</h2><div class="steps"><div class="step"><div class="num">01</div><h3>Start with the claim</h3><p>Separate the statement from the emotion around it.</p></div><div class="step"><div class="num">02</div><h3>Check the source</h3><p>Look for sourcing, context, and evidence you can trace.</p></div><div class="step"><div class="num">03</div><h3>You get a plain verdict</h3><p>No jargon — just what is solid, what is shaky, and why.</p></div></div></section>'}
-function snapshot(){return '<section class="section"><h2>Community snapshot</h2><div class="snaprow"><div class="snap"><div class="num">CLAIMS CHECKED</div><strong style="font-size:28px">1,284</strong></div><div class="snap"><div class="num">MOST COMMON</div><strong>Out-of-context posts</strong></div><div class="snap"><div class="num">TOP TIP</div><strong>Find the original source.</strong></div></div></section>'}
+
+function how(){
+
+  return `
+  <section class="section">
+
+    <h2>
+      How it works
+    </h2>
+
+    <div class="steps">
+
+      <div class="step">
+
+        <div class="num">
+          01
+        </div>
+
+        <h3>
+          Start with the claim
+        </h3>
+
+        <p>
+          Separate the statement from the emotion around it.
+        </p>
+
+      </div>
+
+      <div class="step">
+
+        <div class="num">
+          02
+        </div>
+
+        <h3>
+          Check the source
+        </h3>
+
+        <p>
+          Look for sourcing, context, and evidence you can trace.
+        </p>
+
+      </div>
+
+      <div class="step">
+
+        <div class="num">
+          03
+        </div>
+
+        <h3>
+          You get a plain verdict
+        </h3>
+
+        <p>
+          No jargon — just what is solid, what is shaky, and why.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+  `;
+}
+
+function snapshot(){
+
+  return `
+  <section class="section">
+
+    <h2>
+      Community snapshot
+    </h2>
+
+    <div class="snaprow">
+
+      <div class="snap">
+
+        <div class="num">
+          CLAIMS CHECKED
+        </div>
+
+        <strong style="font-size:28px">
+          1,284
+        </strong>
+
+      </div>
+
+      <div class="snap">
+
+        <div class="num">
+          MOST COMMON
+        </div>
+
+        <strong>
+          Out-of-context posts
+        </strong>
+
+      </div>
+
+      <div class="snap">
+
+        <div class="num">
+          TOP TIP
+        </div>
+
+        <strong>
+          Find the original source.
+        </strong>
+
+      </div>
+
+    </div>
+
+  </section>
+  `;
+}
+
+/* ==========================================
+   MEDIA LAB
+========================================== */
+
 function mediaLab(){
- return '<div class="intro"><div class="eyebrow">MEDIA LAB</div><h1>Look beyond the headline.</h1><p class="sub">Three tools for understanding how claims change, how statements should be classified, and what context may be missing.</p></div>'+
- '<section class="section"><div class="tabs"><button class="'+(labMode==='evolution'?'active':'')+'" onclick="setLabMode(\'evolution\')">CLAIM EVOLUTION</button><button class="'+(labMode==='classification'?'active':'')+'" onclick="setLabMode(\'classification\')">FACT VS. OPINION</button><button class="'+(labMode==='context'?'active':'')+'" onclick="setLabMode(\'context\')">MISSING CONTEXT</button></div><div id="lab"></div></section>'
+
+  return `
+  <div class="intro">
+
+    <div class="eyebrow">
+      MEDIA LAB
+    </div>
+
+    <h1>
+      Look beyond the headline.
+    </h1>
+
+    <p class="sub">
+      Three tools for understanding how claims change,
+      whether a statement is fact or opinion, and what
+      context may be missing.
+    </p>
+
+  </div>
+
+  <section class="section">
+
+    <div class="tabs">
+
+      <button
+        class="${labMode==='evolution'?'active':''}"
+        onclick="setLabMode('evolution')">
+        CLAIM EVOLUTION
+      </button>
+
+      <button
+        class="${labMode==='classification'?'active':''}"
+        onclick="setLabMode('classification')">
+        FACT VS. OPINION
+      </button>
+
+      <button
+        class="${labMode==='context'?'active':''}"
+        onclick="setLabMode('context')">
+        MISSING CONTEXT
+      </button>
+
+    </div>
+
+    <div id="lab"></div>
+
+  </section>
+  `;
 }
+
+/* ==========================================
+   CLAIM EVOLUTION
+========================================== */
 
 function labEvolution(){
- return '<div class="tag">MEDIA LAB 01</div><h2>Claim Evolution</h2><p class="sub">Paste the viral version only. VERIFY will trace the claim back to its original or earliest reliably identifiable version, then explain what changed.</p><label class="small">VIRAL VERSION</label><textarea id="labViral" class="textarea" rows="7" placeholder="Paste the viral claim, post, headline, or message…"></textarea><button class="primary" onclick="runLab(\'claim_evolution\')">Trace Claim Evolution</button><div id="labResult"></div>'
+
+  return `
+  <div class="tag">
+    MEDIA LAB 01
+  </div>
+
+  <h2>
+    Claim Evolution
+  </h2>
+
+  <p class="sub">
+    Paste the viral version. The tool will explain the
+    story of how the claim developed and changed over time.
+  </p>
+
+  <label class="small">
+    VIRAL VERSION
+  </label>
+
+  <textarea
+    id="labViral"
+    class="textarea"
+    rows="7"
+    placeholder="Paste the viral claim, post, headline, or message…">
+  </textarea>
+
+  <button
+    class="primary"
+    onclick="runLab('claim_evolution')">
+    Trace Claim Evolution
+  </button>
+
+  <div id="labResult"></div>
+  `;
 }
+
+/* ==========================================
+   FACT VS OPINION
+========================================== */
 
 function labClassification(){
- return '<div class="tag">MEDIA LAB 02</div><h2>Fact vs. Opinion</h2><p class="sub">Classify a statement as FACT, OPINION, PREDICTION, or UNSUPPORTED CLAIM.</p><textarea id="labText" class="textarea" rows="6" placeholder="Enter a statement…"></textarea><button class="primary" onclick="runLab(\'fact_opinion\')">Classify it</button><div id="labResult"></div>'
+
+  return `
+  <div class="tag">
+    MEDIA LAB 02
+  </div>
+
+  <h2>
+    Fact vs. Opinion
+  </h2>
+
+  <p class="sub">
+    Determine whether a statement is a FACT or an OPINION.
+  </p>
+
+  <textarea
+    id="labText"
+    class="textarea"
+    rows="6"
+    placeholder="Enter a statement…">
+  </textarea>
+
+  <button
+    class="primary"
+    onclick="runLab('fact_opinion')">
+    Classify it
+  </button>
+
+  <div id="labResult"></div>
+  `;
 }
+
+/* ==========================================
+   MISSING CONTEXT
+========================================== */
 
 function labContext(){
- return '<div class="tag">MEDIA LAB 03</div><h2>Missing Context</h2><p class="sub">Identify important context the reader should verify before accepting a claim.</p><textarea id="labText" class="textarea" rows="7" placeholder="Paste the headline, post, or claim…"></textarea><button class="primary" onclick="runLab(\'missing_context\')">Find missing context</button><div id="labResult"></div>'
+
+  return `
+  <div class="tag">
+    MEDIA LAB 03
+  </div>
+
+  <h2>
+    Missing Context
+  </h2>
+
+  <p class="sub">
+    Identify only the important context the reader is
+    missing before accepting the claim.
+  </p>
+
+  <textarea
+    id="labText"
+    class="textarea"
+    rows="7"
+    placeholder="Paste the headline, post, or claim…">
+  </textarea>
+
+  <button
+    class="primary"
+    onclick="runLab('missing_context')">
+    Find missing context
+  </button>
+
+  <div id="labResult"></div>
+  `;
 }
 
-function setLabMode(m){labMode=m;render();setTimeout(()=>document.getElementById('lab')?.scrollIntoView({block:'start'}),0)}
+function setLabMode(m){
+
+  labMode=m;
+
+  render();
+
+  setTimeout(
+    ()=>document.getElementById('lab')
+      ?.scrollIntoView({block:'start'}),
+    0
+  );
+}
+
+/* ==========================================
+   HISTORY
+========================================== */
 
 function history(){
- const h=JSON.parse(localStorage.getItem('verifyHistory')||'[]');
- return '<section class="section"><div class="tag">CHECK HISTORY</div><h2>Recent checks</h2><p class="sub">Saved only in this browser.</p><div id="historyList">'+(h.length?h.map((x,i)=>'<div class="history-item"><div class="small">'+e(new Date(x.time).toLocaleString())+' · '+e(x.mode)+'</div><strong>'+e(x.title||'Check')+'</strong><div style="margin-top:6px">'+formatAnswer(x.answer,true)+'</div><div class="actions"><button onclick="loadHistory('+i+')">Open</button><button onclick="copyText('+JSON.stringify(x.answer)+')">Copy</button><button onclick="removeHistory('+i+')">Delete</button></div></div>').join(''):'<p>No checks saved yet.</p>')+'</div><div class="actions"><button onclick="clearHistory()">Clear history</button></div></section>'
+
+  const h=
+    JSON.parse(
+      localStorage.getItem('verifyHistory')||'[]'
+    );
+
+  return `
+  <section class="section">
+
+    <div class="tag">
+      CHECK HISTORY
+    </div>
+
+    <h2>
+      Recent checks
+    </h2>
+
+    <p class="sub">
+      Saved only in this browser.
+    </p>
+
+    <div id="historyList">
+
+      ${
+        h.length
+        ?
+        h.map((x,i)=>
+          `
+          <div class="history-item">
+
+            <div class="small">
+              ${e(new Date(x.time).toLocaleString())}
+              ·
+              ${e(x.mode)}
+            </div>
+
+            <strong>
+              ${e(x.title||'Check')}
+            </strong>
+
+            <div style="margin-top:6px">
+              ${formatAnswer(x.answer,true)}
+            </div>
+
+            <div class="actions">
+
+              <button onclick="loadHistory(${i})">
+                Open
+              </button>
+
+              <button onclick="copyText(${JSON.stringify(x.answer)})">
+                Copy
+              </button>
+
+              <button onclick="removeHistory(${i})">
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+          `
+        ).join('')
+        :
+        '<p>No checks saved yet.</p>'
+      }
+
+    </div>
+
+    <div class="actions">
+
+      <button onclick="clearHistory()">
+        Clear history
+      </button>
+
+    </div>
+
+  </section>
+  `;
 }
-function footer(){return '<footer class="footer"><b>VERIFY</b> — checked before shared.</footer>'}
-function chatbox(){return '<div class="chat">'+(chat?'<div class="chatbox"><div class="chathead"><span>OTTO</span><button onclick="chat=false;render()" style="background:none;border:0;color:#fff">×</button></div><div id="cb" class="chatbody"><div class="bubble">Hi, I\'m Otto — I can help with questions about checking claims, sources, or using this site. What\'s up?</div></div><div class="chatrow"><input id="ct" placeholder="Ask a question…" onkeydown="if(event.key===\'Enter\')send()"><button onclick="send()">↑</button></div></div>':'')+'<button class="fab" onclick="chat=!chat;render()">'+(chat?'×':'💬')+'</button></div>'}
+
+function footer(){
+
+  return `
+  <footer class="footer">
+    <b>VERIFY</b> — checked before shared.
+  </footer>
+  `;
+}
+
+/* ==========================================
+   OTTO
+========================================== */
+
+function chatbox(){
+
+  return `
+  <div class="chat">
+
+    ${
+      chat
+      ?
+      `
+      <div class="chatbox">
+
+        <div class="chathead">
+
+          <span>
+            OTTO
+          </span>
+
+          <button
+            onclick="chat=false;render()"
+            style="background:none;border:0;color:#fff">
+            ×
+          </button>
+
+        </div>
+
+        <div id="cb" class="chatbody">
+
+          <div class="bubble">
+            Hi, I'm Otto — I can help with questions about
+            checking claims, sources, or using this site.
+            What's up?
+          </div>
+
+        </div>
+
+        <div class="chatrow">
+
+          <input
+            id="ct"
+            placeholder="Ask a question…"
+            onkeydown="if(event.key==='Enter')send()">
+
+          <button onclick="send()">
+            ↑
+          </button>
+
+        </div>
+
+      </div>
+      `
+      :
+      ''
+    }
+
+    <button
+      class="fab"
+      onclick="chat=!chat;render()">
+
+      ${chat?'×':'💬'}
+
+    </button>
+
+  </div>
+  `;
+}
+
+/* ==========================================
+   RENDER
+========================================== */
 
 function render(){
- let content=page==='home'?home():page==='features'?features():page==='medialab'?mediaLab():history();
- A.innerHTML=ticker()+header()+content+footer()+chatbox();
- if(page==='home')mythsGrid();
- if(page==='features'){
-   const c=document.getElementById('checker');
-   if(c)c.innerHTML=checkMode==='claim'?claim():checkMode==='article'?article():checkMode==='url'?urlCheck():sourceCheck();
- }
- if(page==='medialab'){
-   const l=document.getElementById('lab');
-   if(l)l.innerHTML=labMode==='evolution'?labEvolution():labMode==='classification'?labClassification():labContext();
- }
+
+  let content=
+    page==='home'
+    ?home()
+    :page==='features'
+    ?features()
+    :page==='medialab'
+    ?mediaLab()
+    :history();
+
+  A.innerHTML=
+    ticker()+
+    header()+
+    content+
+    footer()+
+    chatbox();
+
+  if(page==='home'){
+    mythsGrid();
+  }
+
+  if(page==='features'){
+
+    const c=
+      document.getElementById('checker');
+
+    if(c){
+
+      c.innerHTML=
+        checkMode==='claim'
+        ?claim()
+        :checkMode==='article'
+        ?article()
+        :checkMode==='url'
+        ?urlCheck()
+        :sourceCheck();
+
+    }
+  }
+
+  if(page==='medialab'){
+
+    const l=
+      document.getElementById('lab');
+
+    if(l){
+
+      l.innerHTML=
+        labMode==='evolution'
+        ?labEvolution()
+        :labMode==='classification'
+        ?labClassification()
+        :labContext();
+
+    }
+  }
 }
-function go(p){page=p;scrollTo(0,0);render()}
-function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('verifyDark',document.body.classList.contains('dark')?'1':'0')}
-function loadTheme(){if(localStorage.getItem('verifyDark')==='1')document.body.classList.add('dark')}
+
+function go(p){
+
+  page=p;
+
+  scrollTo(0,0);
+
+  render();
+}
+
+function toggleDark(){
+
+  document.body.classList.toggle('dark');
+
+  localStorage.setItem(
+    'verifyDark',
+    document.body.classList.contains('dark')
+    ?'1'
+    :'0'
+  );
+}
+
+function loadTheme(){
+
+  if(
+    localStorage.getItem('verifyDark')==='1'
+  ){
+    document.body.classList.add('dark');
+  }
+}
+
+/* ==========================================
+   API CONNECTION
+========================================== */
 
 async function callVerify(mode,text,extra={}){
- const r=await fetch('/api/chat',{
-   method:'POST',
-   headers:{'Content-Type':'application/json'},
-   body:JSON.stringify({mode,text,...extra})
- });
- let data={};try{data=await r.json()}catch(_){}
- if(!r.ok)throw new Error(data.error||'Checking service failed.');
- return data.answer||data.text||data.result||JSON.stringify(data);
+
+  const r=
+    await fetch(
+      '/api/chat',
+      {
+        method:'POST',
+
+        headers:{
+          'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({
+          mode,
+          text,
+          ...extra
+        })
+      }
+    );
+
+  let data={};
+
+  try{
+    data=await r.json();
+  }catch(_){}
+
+  if(!r.ok){
+
+    throw new Error(
+      data.error ||
+      'Checking service failed.'
+    );
+  }
+
+  return(
+    data.answer ||
+    data.text ||
+    data.result ||
+    JSON.stringify(data)
+  );
 }
+
+/* ==========================================
+   NORMAL VERIFICATION FORMAT
+========================================== */
 
 function normalizeAnswer(answer){
- let raw=String(answer||'');
- let verdict=(raw.match(/(?:verdict|classification)\s*[:\-]\s*(TRUE|MOSTLY TRUE|MIXED|PARTLY TRUE|MOSTLY FALSE|FALSE|UNVERIFIABLE)/i)||[])[1]||'';
- let confidence=(raw.match(/confidence\s*[:\-]\s*(VERY LOW|LOW|MODERATE|HIGH|VERY HIGH)/i)||[])[1]||'';
- return {raw,verdict:verdict?verdict.toUpperCase():'',confidence:confidence?confidence.toUpperCase():''}
+
+  let raw=String(answer||'');
+
+  let verdict=
+    (
+      raw.match(
+        /(?:verdict|classification)\s*[:\-]\s*(TRUE|MOSTLY TRUE|MIXED|PARTLY TRUE|MOSTLY FALSE|FALSE|UNVERIFIABLE)/i
+      )||[]
+    )[1]||'';
+
+  let confidence=
+    (
+      raw.match(
+        /confidence\s*[:\-]\s*(VERY LOW|LOW|MODERATE|HIGH|VERY HIGH)/i
+      )||[]
+    )[1]||'';
+
+  return{
+    raw,
+    verdict:
+      verdict
+      ?verdict.toUpperCase()
+      :'',
+
+    confidence:
+      confidence
+      ?confidence.toUpperCase()
+      :''
+  };
 }
+
 function verdictClass(v){
- if(v==='TRUE'||v==='MOSTLY TRUE'||v==='PARTLY TRUE')return 'true';
- if(v==='FALSE'||v==='MOSTLY FALSE')return 'false';
- if(v==='MIXED')return 'misleading';
- return 'unverifiable';
+
+  if(
+    v==='TRUE' ||
+    v==='MOSTLY TRUE' ||
+    v==='PARTLY TRUE'
+  ){
+    return 'true';
+  }
+
+  if(
+    v==='FALSE' ||
+    v==='MOSTLY FALSE'
+  ){
+    return 'false';
+  }
+
+  if(v==='MIXED'){
+    return 'misleading';
+  }
+
+  return 'unverifiable';
 }
+
 function confidencePercent(v){
- return {'VERY LOW':20,'LOW':40,'MODERATE':60,'HIGH':80,'VERY HIGH':100}[v]||0;
+
+  return{
+    'VERY LOW':20,
+    'LOW':40,
+    'MODERATE':60,
+    'HIGH':80,
+    'VERY HIGH':100
+  }[v]||0;
 }
+
 function formatAnswer(answer,compact=false){
- const n=normalizeAnswer(answer);
- let html='';
- if(n.verdict)html+='<div class="verdict '+verdictClass(n.verdict)+'">'+e(n.verdict)+'</div>';
- if(n.confidence)html+='<div class="small">CONFIDENCE '+e(n.confidence)+'</div><div class="score"><i style="width:'+confidencePercent(n.confidence)+'%"></i></div>';
- html+='<div style="white-space:pre-wrap;line-height:1.6">'+e(n.raw)+'</div>';
- return html
+
+  const n=
+    normalizeAnswer(answer);
+
+  let html='';
+
+  if(n.verdict){
+
+    html+=
+      '<div class="verdict '+
+      verdictClass(n.verdict)+
+      '">'+
+      e(n.verdict)+
+      '</div>';
+  }
+
+  if(n.confidence){
+
+    html+=
+      '<div class="small">CONFIDENCE '+
+      e(n.confidence)+
+      '</div>'+
+
+      '<div class="score">'+
+      '<i style="width:'+
+      confidencePercent(n.confidence)+
+      '%"></i>'+
+      '</div>';
+  }
+
+  html+=
+    '<div style="white-space:pre-wrap;line-height:1.6">'+
+    e(n.raw)+
+    '</div>';
+
+  return html;
 }
+
+/* ==========================================
+   HISTORY SAVE
+========================================== */
+
 function saveHistory(mode,title,answer){
- let h=JSON.parse(localStorage.getItem('verifyHistory')||'[]');
- h.unshift({time:Date.now(),mode,title,answer});h=h.slice(0,30);
- localStorage.setItem('verifyHistory',JSON.stringify(h))
+
+  let h=
+    JSON.parse(
+      localStorage.getItem('verifyHistory')||'[]'
+    );
+
+  h.unshift({
+    time:Date.now(),
+    mode,
+    title,
+    answer
+  });
+
+  h=h.slice(0,30);
+
+  localStorage.setItem(
+    'verifyHistory',
+    JSON.stringify(h)
+  );
 }
+
+/* ==========================================
+   NORMAL CHECK
+========================================== */
+
 async function runCheck(mode,text,extra={}){
- const out=document.getElementById('cr');if(!out)return;
- if(!text.trim()){
-   out.innerHTML='<div class="result"><b>Please enter something to check.</b><p>Paste a claim, article, or URL first.</p></div>';
-   return;
- }
- out.innerHTML='<div class="result"><b>Checking…</b><p>Evaluating the claim and available evidence.</p></div>';
- try{
-   const a=await callVerify(mode,text,extra);
-   currentResult={mode,text,answer:a,time:Date.now()};
-   saveHistory(mode,text.slice(0,100),a);
-   out.innerHTML='<div class="result"><b>VERIFY RESULT</b>'+formatAnswer(a)+'<div class="actions"><button onclick="copyCurrent()">Copy result</button><button onclick="shareCurrent()">Share result</button><button onclick="go(\'history\')">History</button></div><div class="warning">AI verification is not guaranteed to be correct. Treat this as an aid to verification, and check the original evidence yourself.</div></div>';
- }catch(err){
-   out.innerHTML='<div class="result"><b style="color:#B23A2E">Unable to check</b><p>'+e(err.message||'The checking service is unavailable.')+'</p><div class="warning">Make sure your Netlify function is deployed and GEMINI_API_KEY is configured.</div></div>';
- }
+
+  const out=
+    document.getElementById('cr');
+
+  if(!out)return;
+
+  if(!text.trim()){
+
+    out.innerHTML=
+      `
+      <div class="result">
+
+        <b>
+          Please enter something to check.
+        </b>
+
+        <p>
+          Paste a claim, article, or URL first.
+        </p>
+
+      </div>
+      `;
+
+    return;
+  }
+
+  out.innerHTML=
+    `
+    <div class="result">
+
+      <b>
+        Checking…
+      </b>
+
+      <p>
+        Evaluating the claim and available evidence.
+      </p>
+
+    </div>
+    `;
+
+  try{
+
+    const a=
+      await callVerify(
+        mode,
+        text,
+        extra
+      );
+
+    currentResult={
+      mode,
+      text,
+      answer:a,
+      time:Date.now()
+    };
+
+    saveHistory(
+      mode,
+      text.slice(0,100),
+      a
+    );
+
+    out.innerHTML=
+      `
+      <div class="result">
+
+        <b>
+          VERIFY RESULT
+        </b>
+
+        ${formatAnswer(a)}
+
+        <div class="actions">
+
+          <button onclick="copyCurrent()">
+            Copy result
+          </button>
+
+          <button onclick="shareCurrent()">
+            Share result
+          </button>
+
+          <button onclick="go('history')">
+            History
+          </button>
+
+        </div>
+
+        <div class="warning">
+          AI verification is not guaranteed to be correct.
+          Treat this as an aid to verification, and check
+          the original evidence yourself.
+        </div>
+
+      </div>
+      `;
+
+  }catch(err){
+
+    out.innerHTML=
+      `
+      <div class="result">
+
+        <b style="color:#B23A2E">
+          Unable to check
+        </b>
+
+        <p>
+          ${e(
+            err.message ||
+            'The checking service is unavailable.'
+          )}
+        </p>
+
+        <div class="warning">
+          Make sure your Netlify function is deployed
+          and GEMINI_API_KEY is configured.
+        </div>
+
+      </div>
+      `;
+  }
 }
+
+/* ==========================================
+   MEDIA LAB
+========================================== */
 
 async function runLab(mode){
- const out=document.getElementById('labResult');
- if(!out)return;
- let text='',extra={};
- if(mode==='claim_evolution'){
-   const viral=document.getElementById('labViral')?.value.trim()||'';
-   if(!viral){
-     out.innerHTML='<div class="result"><b>Please enter the viral version first.</b><p>VERIFY will identify the original version itself.</p></div>';
-     return;
-   }
-   text=viral;extra={viral};
- }else{
-   text=document.getElementById('labText')?.value.trim()||'';
-   if(!text){
-     out.innerHTML='<div class="result"><b>Please enter a statement first.</b><p>Then run the Media Lab tool.</p></div>';
-     return;
-   }
- }
- out.innerHTML='<div class="result"><b>Analyzing…</b><p>Sending your input to the verification assistant.</p></div>';
- try{
-   const a=await callVerify(mode,text,extra);
-   currentResult={mode,text,answer:a,time:Date.now(),extra};
-   saveHistory(mode,text.slice(0,100),a);
-   out.innerHTML='<div class="result"><b>MEDIA LAB RESULT</b><div style="white-space:pre-wrap;line-height:1.6">'+e(a)+'</div><div class="actions"><button onclick="copyText('+JSON.stringify(a)+')">Copy result</button><button onclick="go(\'history\')">History</button></div><div class="warning">This is an aid to verification. Check the original evidence and context yourself.</div></div>';
- }catch(err){
-   out.innerHTML='<div class="result"><b style="color:#B23A2E">Unable to analyze</b><p>'+e(err.message||'The checking service is unavailable.')+'</p><div class="warning">Make sure your Netlify function is deployed and GEMINI_API_KEY is configured.</div></div>';
- }
+
+  const out=
+    document.getElementById('labResult');
+
+  if(!out)return;
+
+  let text='';
+  let extra={};
+
+  /* CLAIM EVOLUTION */
+
+  if(mode==='claim_evolution'){
+
+    const viral=
+      document
+        .getElementById('labViral')
+        ?.value
+        .trim() ||
+      '';
+
+    if(!viral){
+
+      out.innerHTML=
+        `
+        <div class="result">
+
+          <b>
+            Please enter the viral version first.
+          </b>
+
+          <p>
+            Paste the claim, post, headline, or message
+            you want to trace.
+          </p>
+
+        </div>
+        `;
+
+      return;
+    }
+
+    text=viral;
+
+    extra={
+      viral
+    };
+  }
+
+  /* OTHER MEDIA LAB TOOLS */
+
+  else{
+
+    text=
+      document
+        .getElementById('labText')
+        ?.value
+        .trim() ||
+      '';
+
+    if(!text){
+
+      out.innerHTML=
+        `
+        <div class="result">
+
+          <b>
+            Please enter a statement first.
+          </b>
+
+        </div>
+        `;
+
+      return;
+    }
+  }
+
+  out.innerHTML=
+    `
+    <div class="result">
+
+      <b>
+        Analyzing…
+      </b>
+
+      <p>
+        Processing the Media Lab request.
+      </p>
+
+    </div>
+    `;
+
+  try{
+
+    const a=
+      await callVerify(
+        mode,
+        text,
+        extra
+      );
+
+    currentResult={
+      mode,
+      text,
+      answer:a,
+      time:Date.now(),
+      extra
+    };
+
+    saveHistory(
+      mode,
+      text.slice(0,100),
+      a
+    );
+
+    /* =====================================
+       FACT VS OPINION
+    ===================================== */
+
+    if(mode==='fact_opinion'){
+
+      const upper=
+        String(a)
+          .trim()
+          .toUpperCase();
+
+      let type='';
+
+      if(
+        upper.startsWith('FACT')
+      ){
+        type='FACT';
+      }
+      else if(
+        upper.startsWith('OPINION')
+      ){
+        type='OPINION';
+      }
+
+      out.innerHTML=
+        `
+        <div class="result">
+
+          <b>
+            FACT OR OPINION
+          </b>
+
+          ${
+            type
+            ?
+            `
+            <h2 style="margin:15px 0 8px">
+              ${e(type)}
+            </h2>
+            `
+            :
+            ''
+          }
+
+          <div
+            style="white-space:pre-wrap;line-height:1.6">
+
+            ${e(a)}
+
+          </div>
+
+          <div class="actions">
+
+            <button
+              onclick="copyText(${JSON.stringify(a)})">
+              Copy result
+            </button>
+
+            <button
+              onclick="go('history')">
+              History
+            </button>
+
+          </div>
+
+        </div>
+        `;
+
+      return;
+    }
+
+    /* =====================================
+       MISSING CONTEXT
+    ===================================== */
+
+    if(mode==='missing_context'){
+
+      out.innerHTML=
+        `
+        <div class="result">
+
+          <b>
+            MISSING CONTEXT
+          </b>
+
+          <div
+            style="white-space:pre-wrap;line-height:1.6;margin-top:12px">
+
+            ${e(a)}
+
+          </div>
+
+          <div class="actions">
+
+            <button
+              onclick="copyText(${JSON.stringify(a)})">
+              Copy context
+            </button>
+
+            <button
+              onclick="go('history')">
+              History
+            </button>
+
+          </div>
+
+        </div>
+        `;
+
+      return;
+    }
+
+    /* =====================================
+       CLAIM EVOLUTION
+    ===================================== */
+
+    if(mode==='claim_evolution'){
+
+      out.innerHTML=
+        `
+        <div class="result">
+
+          <b>
+            CLAIM EVOLUTION
+          </b>
+
+          <div
+            style="white-space:pre-wrap;line-height:1.6;margin-top:12px">
+
+            ${e(a)}
+
+          </div>
+
+          <div class="actions">
+
+            <button
+              onclick="copyText(${JSON.stringify(a)})">
+              Copy story
+            </button>
+
+            <button
+              onclick="go('history')">
+              History
+            </button>
+
+          </div>
+
+        </div>
+        `;
+
+      return;
+    }
+
+  }catch(err){
+
+    out.innerHTML=
+      `
+      <div class="result">
+
+        <b style="color:#B23A2E">
+          Unable to analyze
+        </b>
+
+        <p>
+          ${e(
+            err.message ||
+            'The checking service is unavailable.'
+          )}
+        </p>
+
+        <div class="warning">
+          Make sure your Netlify function is deployed
+          and GEMINI_API_KEY is configured.
+        </div>
+
+      </div>
+      `;
+  }
 }
 
-function checkClaim(){const v=document.getElementById('ci')?.value.trim();if(v)runCheck(checkMode,v)}
-function checkURL(){const v=document.getElementById('ui')?.value.trim();if(v)runCheck('url',v,{url:v})}
+/* ==========================================
+   BUTTON FUNCTIONS
+========================================== */
+
+function checkClaim(){
+
+  const v=
+    document
+      .getElementById('ci')
+      ?.value
+      .trim();
+
+  if(v){
+    runCheck(
+      checkMode,
+      v
+    );
+  }
+}
+
+function checkURL(){
+
+  const v=
+    document
+      .getElementById('ui')
+      ?.value
+      .trim();
+
+  if(v){
+
+    runCheck(
+      'url',
+      v,
+      {
+        url:v
+      }
+    );
+  }
+}
+
 async function checkSource(){
- const v=document.getElementById('si')?.value.trim();if(!v){const out=document.getElementById('sr');if(out)out.innerHTML='<div class="result"><b>Please enter a source.</b><p>Enter the outlet or publication you want to assess.</p></div>';return;}
- const out=document.getElementById('sr');out.innerHTML='<div class="result"><b>Checking…</b><p>Evaluating the source and looking for supporting evidence.</p></div>';
- try{
-   const a=await callVerify('source',v);saveHistory('source',v.slice(0,100),a);
-   out.innerHTML='<div class="result"><b>SOURCE RESULT</b>'+formatAnswer(a)+'<div class="actions"><button onclick="copyText('+JSON.stringify(a)+')">Copy result</button><button onclick="go(\'history\')">History</button></div><div class="warning">A source reputation is not proof that every article it publishes is accurate.</div></div>'
- }catch(err){out.innerHTML='<div class="result"><b style="color:#B23A2E">Unable to check</b><p>'+e(err.message)+'</p></div>'}
+
+  const v=
+    document
+      .getElementById('si')
+      ?.value
+      .trim();
+
+  if(!v){
+
+    const out=
+      document.getElementById('sr');
+
+    if(out){
+
+      out.innerHTML=
+        `
+        <div class="result">
+
+          <b>
+            Please enter a source.
+          </b>
+
+          <p>
+            Enter the outlet or publication you want to assess.
+          </p>
+
+        </div>
+        `;
+    }
+
+    return;
+  }
+
+  const out=
+    document.getElementById('sr');
+
+  out.innerHTML=
+    `
+    <div class="result">
+
+      <b>
+        Checking…
+      </b>
+
+      <p>
+        Evaluating the source.
+      </p>
+
+    </div>
+    `;
+
+  try{
+
+    const a=
+      await callVerify(
+        'source',
+        v
+      );
+
+    saveHistory(
+      'source',
+      v.slice(0,100),
+      a
+    );
+
+    out.innerHTML=
+      `
+      <div class="result">
+
+        <b>
+          SOURCE RESULT
+        </b>
+
+        ${formatAnswer(a)}
+
+        <div class="actions">
+
+          <button
+            onclick="copyText(${JSON.stringify(a)})">
+            Copy result
+          </button>
+
+          <button
+            onclick="go('history')">
+            History
+          </button>
+
+        </div>
+
+        <div class="warning">
+          A source reputation is not proof that every article
+          it publishes is accurate.
+        </div>
+
+      </div>
+      `;
+
+  }catch(err){
+
+    out.innerHTML=
+      `
+      <div class="result">
+
+        <b style="color:#B23A2E">
+          Unable to check
+        </b>
+
+        <p>
+          ${e(err.message)}
+        </p>
+
+      </div>
+      `;
+  }
 }
+
+/* ==========================================
+   OTTO CHAT
+========================================== */
+
 async function send(){
- let i=document.getElementById('ct');if(!i.value.trim())return;
- let text=i.value.trim(),b=document.getElementById('cb');
- b.innerHTML+='<div class="bubble user">'+e(text)+'</div><div class="bubble" id="otto-loading">Thinking…</div>';i.value='';b.scrollTop=b.scrollHeight;
- try{const a=await callVerify('otto',text);const l=document.getElementById('otto-loading');if(l)l.outerHTML='<div class="bubble">'+e(a)+'</div>'}
- catch(err){const l=document.getElementById('otto-loading');if(l)l.outerHTML='<div class="bubble">'+e(err.message)+'</div>'}
- b.scrollTop=b.scrollHeight
+
+  let i=
+    document.getElementById('ct');
+
+  if(!i.value.trim())return;
+
+  let text=
+    i.value.trim();
+
+  let b=
+    document.getElementById('cb');
+
+  b.innerHTML+=
+    `
+    <div class="bubble user">
+      ${e(text)}
+    </div>
+
+    <div
+      class="bubble"
+      id="otto-loading">
+      Thinking…
+    </div>
+    `;
+
+  i.value='';
+
+  b.scrollTop=b.scrollHeight;
+
+  try{
+
+    const a=
+      await callVerify(
+        'otto',
+        text
+      );
+
+    const l=
+      document.getElementById(
+        'otto-loading'
+      );
+
+    if(l){
+
+      l.outerHTML=
+        `
+        <div class="bubble">
+          ${e(a)}
+        </div>
+        `;
+    }
+
+  }catch(err){
+
+    const l=
+      document.getElementById(
+        'otto-loading'
+      );
+
+    if(l){
+
+      l.outerHTML=
+        `
+        <div class="bubble">
+          ${e(err.message)}
+        </div>
+        `;
+    }
+  }
+
+  b.scrollTop=b.scrollHeight;
 }
+
+/* ==========================================
+   COPY / SHARE
+========================================== */
+
 async function copyText(text){
- try{await navigator.clipboard.writeText(String(text));alert('Copied.')}catch(_){prompt('Copy this result:',String(text))}
+
+  try{
+
+    await navigator.clipboard.writeText(
+      String(text)
+    );
+
+    alert('Copied.');
+
+  }catch(_){
+
+    prompt(
+      'Copy this result:',
+      String(text)
+    );
+  }
 }
-function copyCurrent(){if(currentResult)copyText(currentResult.answer)}
+
+function copyCurrent(){
+
+  if(currentResult){
+
+    copyText(
+      currentResult.answer
+    );
+  }
+}
+
 async function shareCurrent(){
- if(!currentResult)return;
- const text='VERIFY RESULT\n\n'+currentResult.answer;
- if(navigator.share){try{await navigator.share({title:'Verify result',text})}catch(_){}}
- else copyText(text)
+
+  if(!currentResult)return;
+
+  const text=
+    'VERIFY RESULT\n\n'+
+    currentResult.answer;
+
+  if(navigator.share){
+
+    try{
+
+      await navigator.share({
+        title:'Verify result',
+        text
+      });
+
+    }catch(_){}
+
+  }else{
+
+    copyText(text);
+  }
 }
+
+/* ==========================================
+   HISTORY
+========================================== */
+
 function loadHistory(i){
- const h=JSON.parse(localStorage.getItem('verifyHistory')||'[]'),x=h[i];if(!x)return;
- currentResult=x;page=(x.mode==='claim_evolution'||x.mode==='fact_opinion'||x.mode==='missing_context')?'medialab':'features';checkMode=x.mode==='article'||x.mode==='url'||x.mode==='claim'||x.mode==='source'?x.mode:'claim';if(page==='medialab')labMode=x.mode==='claim_evolution'?'evolution':x.mode==='fact_opinion'?'classification':'context';render();
- setTimeout(()=>{
-   const out=document.getElementById('cr');
-   if(out)out.innerHTML='<div class="result"><b>VERIFY RESULT</b>'+formatAnswer(x.answer)+'<div class="actions"><button onclick="copyCurrent()">Copy result</button><button onclick="shareCurrent()">Share result</button></div><div class="warning">AI verification is not guaranteed to be correct. Treat this as an aid to verification, and check the original evidence yourself.</div></div>'
- },0)
+
+  const h=
+    JSON.parse(
+      localStorage.getItem('verifyHistory')||'[]'
+    );
+
+  const x=h[i];
+
+  if(!x)return;
+
+  currentResult=x;
+
+  page=
+    (
+      x.mode==='claim_evolution' ||
+      x.mode==='fact_opinion' ||
+      x.mode==='missing_context'
+    )
+    ?
+    'medialab'
+    :
+    'features';
+
+  checkMode=
+    (
+      x.mode==='article' ||
+      x.mode==='url' ||
+      x.mode==='claim' ||
+      x.mode==='source'
+    )
+    ?
+    x.mode
+    :
+    'claim';
+
+  if(page==='medialab'){
+
+    labMode=
+      x.mode==='claim_evolution'
+      ?
+      'evolution'
+      :
+      x.mode==='fact_opinion'
+      ?
+      'classification'
+      :
+      'context';
+  }
+
+  render();
+
+  setTimeout(()=>{
+
+    const out=
+      document.getElementById('cr');
+
+    if(out){
+
+      out.innerHTML=
+        `
+        <div class="result">
+
+          <b>
+            VERIFY RESULT
+          </b>
+
+          ${formatAnswer(x.answer)}
+
+          <div class="actions">
+
+            <button onclick="copyCurrent()">
+              Copy result
+            </button>
+
+            <button onclick="shareCurrent()">
+              Share result
+            </button>
+
+          </div>
+
+          <div class="warning">
+            AI verification is not guaranteed to be correct.
+            Treat this as an aid to verification, and check
+            the original evidence yourself.
+          </div>
+
+        </div>
+        `;
+    }
+
+  },0);
 }
-function removeHistory(i){let h=JSON.parse(localStorage.getItem('verifyHistory')||'[]');h.splice(i,1);localStorage.setItem('verifyHistory',JSON.stringify(h));render()}
-function clearHistory(){if(confirm('Clear all saved checks from this browser?')){localStorage.removeItem('verifyHistory');render()}}
+
+function removeHistory(i){
+
+  let h=
+    JSON.parse(
+      localStorage.getItem('verifyHistory')||'[]'
+    );
+
+  h.splice(i,1);
+
+  localStorage.setItem(
+    'verifyHistory',
+    JSON.stringify(h)
+  );
+
+  render();
+}
+
+function clearHistory(){
+
+  if(
+    confirm(
+      'Clear all saved checks from this browser?'
+    )
+  ){
+
+    localStorage.removeItem(
+      'verifyHistory'
+    );
+
+    render();
+  }
+}
+
+/* ==========================================
+   START
+========================================== */
 
 loadTheme();
+
 render();
+
 </script>
+
 </body>
 </html>
